@@ -32,6 +32,26 @@ else
   printf '\033[31m✗  dist/ is stale. Run scripts/build.sh and commit.\033[0m\n'; fail=1
 fi
 
+step "Every reviewer can read a diff"
+# A reviewer with no shell cannot run git, and a reviewer that cannot run git
+# reviews the working tree instead of the change. That failure is silent: the
+# report looks exactly like a real one. AS-6 is where this was found.
+blind=""
+for d in agents/*-reviewer/; do
+  n="$(basename "${d%/}")"
+  for a in "$d"adapters/*.yaml; do
+    [ -f "$a" ] || continue
+    grep -qiE '(^| )bash|shell' "$a" || blind="$blind$n ($(basename "$a"))\n"
+  done
+done
+if [ -n "$blind" ]; then
+  printf '\033[31m✗  Reviewers with no shell, so no git, so no diff:\033[0m\n'
+  printf "$blind"
+  fail=1
+else
+  ok "every reviewer adapter grants a shell"
+fi
+
 step "Every seed has an expected.md"
 missing=$(for d in agents/*/seeds/*/; do [ -f "$d/expected.md" ] || echo "$d"; done)
 if [ -n "$missing" ]; then printf '\033[31m✗  seeds with no expected.md:\033[0m\n%s\n' "$missing"; fail=1

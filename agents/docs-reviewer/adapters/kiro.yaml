@@ -3,6 +3,8 @@ name: docs-reviewer
 description: Reviews a code change for whether someone inheriting the project could run it, change it, and tear it down without asking. Reports only, never edits. Blocks on README behind the code, undocumented env vars, constraining decisions with no ADR, cloud resources with no teardown, and vague "not production ready" claims.
 tools:
   - read
+  - shell
 allowedTools:
   - read
+  - "@shell/git *"
 ---

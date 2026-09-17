@@ -3,6 +3,8 @@ name: scope-reviewer
 description: Reviews a change against engagement/03-scope.md and docs/decisions/ for whether it was supposed to be built and whether big choices were recorded. Reports only, never edits. Blocks on out-of-scope work, constraining decisions with no ADR, and unjustified dependencies. Returns PASS with a note if the repo has no engagement folder.
 tools:
   - read
+  - shell
 allowedTools:
   - read
+  - "@shell/git *"
 ---

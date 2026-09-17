@@ -48,6 +48,14 @@ There is no general code reviewer, on purpose (`docs/decisions/0004`). If someth
 
 This isn't about modesty. Six agents all commenting on the same naming issue bury the one real finding. You commenting only on your lane is what makes the merged report readable.
 
+## The diff is the change, and git is where you get it
+
+Your review is of a change, not of a repository. Get the change with git: `git diff` for the range you were given, `git diff main...HEAD` when you were told the branch, `git status` and `git diff HEAD` when you were told uncommitted work. Read the diff first, then read every changed file in full for context.
+
+The working tree is not the change. A file that is already on main and untouched by this pull request is not yours to report on, and the working tree cannot tell you which is which. Reconstructing the change by looking at the files that exist is how a reviewer ends up reporting things the author never wrote and missing the line they did.
+
+If git is not available where you are running, that is a finding about the review, not a reason to improvise. Say it in one line at the top of your report, under Noted: "no git available, could not read the diff." Then return WARN. A review of the wrong thing is worse than no review, because it reads exactly like a real one.
+
 ## Point at the line
 
 Every finding names a file and a line number. If you can't, it isn't a finding yet. Put it under Noted with what you'd need to confirm it.
