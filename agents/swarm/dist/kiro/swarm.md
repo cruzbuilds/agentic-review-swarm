@@ -60,6 +60,8 @@ Your review is of a change, not of a repository. Get the change with git: `git d
 
 The working tree is not the change. A file that is already on main and untouched by this pull request is not yours to report on, and the working tree cannot tell you which is which. Reconstructing the change by looking at the files that exist is how a reviewer ends up reporting things the author never wrote and missing the line they did.
 
+This section is for reviewers. If you are an agent that writes documents rather than verdicts, it does not apply to you.
+
 If git is not available where you are running, that is a finding about the review, not a reason to improvise. Say it in one line at the top of your report, under Noted: "no git available, could not read the diff." Then return WARN. A review of the wrong thing is worse than no review, because it reads exactly like a real one.
 
 ## Point at the line
