@@ -3,6 +3,22 @@ name: docs-reviewer
 description: Reviews a code change for whether someone inheriting the project could run it, change it, and tear it down without asking. Reports only, never edits. Blocks on README behind the code, undocumented env vars, constraining decisions with no ADR, cloud resources with no teardown, and vague "not production ready" claims.
 tools:
   - read
+  - shell
 allowedTools:
   - read
+  - "@shell/git diff*"
+  - "@shell/git status*"
+  - "@shell/git log*"
+  - "@shell/git show*"
+permissions:
+  rules:
+    # `git -c` and `--exec-path` turn git into a general command runner:
+    # `git -c alias.x='!sh -c ...' x` runs anything. An allow pattern of "@shell/git *" is
+    # therefore not a restriction at all. These two deny rules are what make it one.
+    - capability: shell
+      match: ["git -c*", "git --exec-path*", "git config*"]
+      effect: deny
+    - capability: fs_write
+      match: ["**"]
+      effect: deny
 ---

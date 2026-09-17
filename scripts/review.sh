@@ -13,8 +13,14 @@
 #
 # The agents get a tool allowlist wide enough to read files, grep, and run git, python, and the
 # project's own test command. Without that, a test reviewer can't run tests and a scope reviewer
-# can't see the diff, and both will tell you so under Noted instead of pretending. Override with
-# CLAUDE_FLAGS if you need something different.
+# can't see the diff, and both will tell you so under Noted instead of pretending.
+#
+# Bash is NOT granted bare. A reviewer's only input is a diff written by whoever wrote the change
+# under review, which is untrusted content reaching a command executor. Claude Code's agent
+# frontmatter can only name tools, not commands, so the scoping lives here instead: an explicit
+# allow list of the commands a reviewer actually runs, and a deny list for the ways git can be
+# turned into a general command runner. Override with CLAUDE_FLAGS if you need something else,
+# and know what you're widening when you do.
 #
 # Exit code: 0 for PASS, 1 for WARN, 2 for BLOCK, 3 if no verdict could be read from the output.
 set -euo pipefail
@@ -22,7 +28,7 @@ cd "$(dirname "$0")/.."
 
 repo="${1:?usage: scripts/review.sh /path/to/repo [git-range]}"
 range="${2:-}"
-: "${CLAUDE_FLAGS:=--allowedTools Read,Grep,Glob,Bash,Task --max-turns 60}"
+: "${CLAUDE_FLAGS:=--allowedTools Read,Grep,Glob,Task --max-turns 60}"
 
 [ -d "$repo/.git" ] || { echo "not a git repository: $repo" >&2; exit 3; }
 command -v claude >/dev/null || { echo "claude CLI not on PATH" >&2; exit 3; }
@@ -35,6 +41,48 @@ trap 'rm -rf "$work"' EXIT
 tar -C "$repo" -cf - --exclude=node_modules --exclude=.venv --exclude=__pycache__ . | tar -C "$work" -xf -
 
 mkdir -p "$work/.claude/agents" "$work/.claude/commands"
+
+# Command-level permissions for this run. `deny` wins over `allow` in Claude Code, so the two
+# git escapes below stay shut no matter what an agent asks for. Anything not listed is simply
+# not permitted, and in headless mode an unpermitted call is refused rather than prompted, so a
+# reviewer that needs something it doesn't have says so under Noted. That is the intended
+# behavior: a review that quietly did less is worse than one that says what it couldn't do.
+cat > "$work/.claude/settings.json" <<'JSON'
+{
+  "permissions": {
+    "deny": [
+      "Bash(git -c:*)",
+      "Bash(git --exec-path:*)",
+      "Bash(git config:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)"
+    ],
+    "allow": [
+      "Bash(git diff:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git ls-files:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git blame:*)",
+      "Bash(pytest:*)",
+      "Bash(ruff:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm audit:*)",
+      "Bash(pip-audit:*)",
+      "Bash(gitleaks:*)",
+      "Bash(semgrep:*)",
+      "Bash(actionlint:*)",
+      "Bash(checkov:*)",
+      "Bash(tflint:*)",
+      "Bash(hadolint:*)",
+      "Bash(shellcheck:*)",
+      "Bash(./scripts/check.sh)"
+    ]
+  }
+}
+JSON
 for d in agents/*/; do
   d="${d%/}"; n="$(basename "$d")"; f="$d/dist/claude/$n.md"
   [ -f "$f" ] || continue
