@@ -21,7 +21,7 @@ Then: `/swarm` on Claude Code, or `/swarm main..HEAD` for a specific range. From
 
 ## What it caught on its first real use
 
-On the first pull request of [shelflife](https://github.com/Cruzcodez/shelflife), one agent handed a finding to a "code-reviewer" that does not exist in this collection. The merge step listed it under "Handoffs nobody picked up" instead of dropping it, which is the right failure mode. The root cause, that no agent was told who else exists, was fixed the same day: the shared contract now carries the roster. Details in [docs/eval-log.md](../../docs/eval-log.md).
+On the first pull request of [shelflife](https://github.com/cruzbuilds/shelflife), one agent handed a finding to a "code-reviewer" that does not exist in this collection. The merge step listed it under "Handoffs nobody picked up" instead of dropping it, which is the right failure mode. The root cause, that no agent was told who else exists, was fixed the same day: the shared contract now carries the roster. Details in [docs/eval-log.md](../../docs/eval-log.md).
 
 ## Seeds
 

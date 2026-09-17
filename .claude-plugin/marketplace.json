@@ -2,7 +2,7 @@
   "name": "agentic-swarm",
   "owner": {
     "name": "Chris Cruz",
-    "url": "https://github.com/Cruzcodez"
+    "url": "https://github.com/cruzbuilds"
   },
   "metadata": {
     "description": "Specialized review agents. Each one reads a change from one angle, refuses to pass specific problems, and reports in a shared format. Install one or all."
