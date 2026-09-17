@@ -52,3 +52,19 @@ The swarm reviewed its first real pull request (shelflife (then called expiry-tr
 ### Pattern worth remembering
 
 A charter tells an agent what to look for. It also has to tell the agent what the rest of the team looks like, or the agent fills in the gap with the most common name it has seen. The seeds could never have found this because every seed exercises one agent alone. It took a real PR with a finding that fell between the lanes.
+
+## 2026-09-17, the rename
+
+Not an eval finding. Recording it here because it is the same class of problem the eval log exists for: something that was correct when written and stopped being correct later, with nothing watching.
+
+The GitHub account was renamed from `Cruzcodez` to `cruzbuilds`. Every install line in this repository still named the old account:
+
+```
+/plugin marketplace add Cruzcodez/agentic-swarm
+```
+
+GitHub redirects a retired username until someone else claims it. For a normal link that means a dead link one day. For this line it means worse: a user pastes it into Claude Code, which fetches a marketplace manifest from whoever owns that name now and installs agent files from it. Those files are instructions an agent then follows. A stale install line in an agent repository is a supply chain link, not a broken hyperlink.
+
+Swept: the marketplace manifest, all seven plugin manifests, the README, and three agent READMEs. `dist/` needed no change, since the built agent files never named the account.
+
+Worth remembering: no agent flagged this, and no agent could have. The links were right when they were written. The seeds test whether an agent catches a defect in a diff; nothing here tests whether the world moved under a file that has not changed.

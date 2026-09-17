@@ -1,5 +1,10 @@
 # agentic-swarm
 
+[![CI](https://github.com/cruzbuilds/agentic-swarm/actions/workflows/ci.yml/badge.svg)](https://github.com/cruzbuilds/agentic-swarm/actions/workflows/ci.yml)
+[![Agents](https://img.shields.io/badge/agents-7-8A2BE2)](agents/)
+[![Seeds passing](https://img.shields.io/badge/seeds-35%20passing-brightgreen)](docs/eval-log.md)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 Specialized AI review agents. Each one reads a code change from one angle, refuses to pass specific problems, and reports in a shared format. Install one, or all of them.
 
 **Agentic Swarm Development** is the idea behind it: many narrow reviewers examine the same change at once, each with a defined lane and a list of what it won't let through, and their findings merge into a single verdict. Agents criticize. People build.
@@ -13,7 +18,7 @@ You don't need the whole repo. Each agent installs on its own.
 **Claude Code**
 
 ```
-/plugin marketplace add Cruzcodez/agentic-swarm
+/plugin marketplace add cruzbuilds/agentic-swarm
 /plugin install security-reviewer@agentic-swarm
 ```
 
@@ -22,7 +27,7 @@ Then, in any project: "Use the security-reviewer subagent to review this change.
 **Kiro**
 
 ```bash
-git clone https://github.com/Cruzcodez/agentic-swarm
+git clone https://github.com/cruzbuilds/agentic-swarm
 cd agentic-swarm
 scripts/install-kiro.sh security-reviewer
 ```
@@ -146,11 +151,11 @@ When an agent misses something on a real repository, that becomes a new seed.
 | `docs/decisions/` | Individual decisions, recorded as ADRs |
 | `AGENTS.md` | Working agreement for coding agents changing this repo |
 
-This repo was generated from [project-starter](https://github.com/Cruzcodez/project-starter) and is the first real use of it.
+This repo was generated from [project-starter](https://github.com/cruzbuilds/project-starter) and is the first real use of it.
 
 ## Status
 
-Working, and in use. Seven agents, 35 seeds passing, and four real pull requests reviewed on [shelflife](https://github.com/Cruzcodez/shelflife), a project built with this swarm reviewing every change before it opens. Every review came back BLOCK at least once. Across four swarm passes: 12 blocking findings, 16 should-fix, 27 accepted and fixed in the same pull request, none overridden, and by the author's own count 18 of 30 would have been missed without the review. The per-finding scorecards are in that project's [docs/review-log.md](https://github.com/Cruzcodez/shelflife/blob/main/docs/review-log.md).
+Working, and in use. Seven agents, 35 seeds passing, and four real pull requests reviewed on [shelflife](https://github.com/cruzbuilds/shelflife), a project built with this swarm reviewing every change before it opens. Every review came back BLOCK at least once. Across four swarm passes: 12 blocking findings, 16 should-fix, 27 accepted and fixed in the same pull request, none overridden, and by the author's own count 18 of 30 would have been missed without the review. The per-finding scorecards are in that project's [docs/review-log.md](https://github.com/cruzbuilds/shelflife/blob/main/docs/review-log.md).
 
 Two findings worth naming. A reviewer stood up a local server and proved the tool would follow an HTTP redirect to `127.0.0.1`, a request-forgery hole in code written an hour earlier. And on a second pass, the agents were handed a review log claiming everything had been fixed, treated that as a claim to verify rather than a fact, and found what it missed.
 

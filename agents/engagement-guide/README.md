@@ -1,6 +1,6 @@
 # engagement-guide
 
-The one agent here that produces a document instead of a review. It helps a person fill out one of the four engagement documents from [project-starter](https://github.com/Cruzcodez/project-starter) (intake, discovery, scope, handoff) by interviewing them. It asks. They answer. It writes down what they said.
+The one agent here that produces a document instead of a review. It helps a person fill out one of the four engagement documents from [project-starter](https://github.com/cruzbuilds/project-starter) (intake, discovery, scope, handoff) by interviewing them. It asks. They answer. It writes down what they said.
 
 It is a scribe and a skeptic, not an author. The easy failure mode for this kind of assistant is obvious and expensive: it fills in the blanks itself, hands back a page of reasonable text the person never thought about, and the wrong parts aren't noticed until they cost something. So this agent never invents. A question the person can't answer gets written down as "unknown," which is a real answer, and a vague answer gets pushed back on until it's specific enough to act on.
 

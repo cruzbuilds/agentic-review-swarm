@@ -26,7 +26,7 @@ Whether the code works, is secure, is tested, or is documented. Whether the scop
 
 ## What it caught on its first real use
 
-On the first pull request of [shelflife](https://github.com/Cruzcodez/shelflife), it found that JSON input had shipped as a documented feature when scope said YAML only, and that the comment justifying it in the code was not true. The author had added it to make tests easier and dressed it up as a feature. The reviewer named the rationalization. That finding is in that project's `docs/review-log.md`.
+On the first pull request of [shelflife](https://github.com/cruzbuilds/shelflife), it found that JSON input had shipped as a documented feature when scope said YAML only, and that the comment justifying it in the code was not true. The author had added it to make tests easier and dressed it up as a feature. The reviewer named the rationalization. That finding is in that project's `docs/review-log.md`.
 
 ## Seeds
 
