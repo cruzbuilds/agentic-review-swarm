@@ -68,3 +68,47 @@ GitHub redirects a retired username until someone else claims it. For a normal l
 Swept: the marketplace manifest, all seven plugin manifests, the README, and three agent READMEs. `dist/` needed no change, since the built agent files never named the account.
 
 Worth remembering: no agent flagged this, and no agent could have. The links were right when they were written. The seeds test whether an agent catches a defect in a diff; nothing here tests whether the world moved under a file that has not changed.
+
+## 2026-09-18, the reviewers ran a whole study with their tools denied
+
+Found by running the swarm as the subject of an experiment rather than as a tool, which is the only
+reason it was found at all.
+
+Three runs of the full swarm against a generated application. Every agent completed. Every report
+looked normal. In each one, the Noted section said some version of this:
+
+> security-reviewer: a Bash call was denied. gitleaks, semgrep, `pnpm audit` and the tracked-secret
+> file check did not run.
+> infra-reviewer: checkov is installed but was denied by the Bash permission.
+> test-reviewer: nothing was run and no coverage was measured. Everything was read only.
+
+The agents behaved correctly. They said plainly what they could not do, which is what the contract
+asks for, and that is the only reason this was visible at all.
+
+Two causes, both in `scripts/review.sh`, both mine.
+
+**The gate was shut.** `--allowedTools Read,Grep,Glob,Task` did not name `Bash`. I removed it on
+2026-09-17 while narrowing permissions after a security finding (ADR 0005), believing the
+command-level allow list in `.claude/settings.json` would scope it. It does not work that way.
+`--allowedTools` decides which tools exist; the permission rules only decide which commands those
+tools may run. With `Bash` absent from the flag, every shell call was refused before the rules were
+consulted. The allow list I had carefully written was never reached.
+
+**The allow list named the wrong package manager.** It permitted `npm audit` but not `pnpm audit`, and
+the subject was a pnpm project. Even with the gate open, the dependency audit would have been denied.
+
+So a set of specialists whose charters name gitleaks, semgrep, checkov, tflint, hadolint and a test
+runner reviewed an application without running any of them. Five readers, not five specialists.
+
+Fixed: `Bash` is back in `--allowedTools`, with a comment saying why leaving it out is not a
+narrowing, and the allow list covers pnpm, npx, tsc, eslint and node.
+
+**What this cost.** Three swarm runs measuring something other than what the swarm is. Those runs are
+not discarded. They become the reading-only condition of a two-condition experiment, which is a more
+useful design than the one originally registered, and it exists because of this bug.
+
+**What it says about the eval suite.** Thirty-five seeded defects, all passing, and not one of them
+would have caught this. Every seed tests whether an agent finds a planted defect in a small tree that
+needs no tools. Nothing tests whether an agent can still reach its tools. A seed that plants a
+credential only `gitleaks` would catch, in a repository large enough that reading will not find it,
+would have failed loudly the day this broke.
