@@ -68,3 +68,29 @@ GitHub redirects a retired username until someone else claims it. For a normal l
 Swept: the marketplace manifest, all seven plugin manifests, the README, and three agent READMEs. `dist/` needed no change, since the built agent files never named the account.
 
 Worth remembering: no agent flagged this, and no agent could have. The links were right when they were written. The seeds test whether an agent catches a defect in a diff; nothing here tests whether the world moved under a file that has not changed.
+
+## 2026-09-19, systems-reviewer Run 001: the reviewer found bugs in its own seeds
+
+First eval of the V2 systems reviewer against six interaction seeds at `53445c2`. Five defect
+seeds: BLOCK, intended interaction reconstructed, five-part finding present, no checklist item in
+any blocking section. Full matrix and raw reports in `docs/evals/systems-reviewer/run-001/`.
+
+The clean seed came back BLOCK, and it was right. `reopen` in the tickets fixture relied on
+`satisfaction is None` instead of checking for RESOLVED, and the shared transition table let it move
+a PENDING ticket to OPEN with no reply, which the README and the function's own docstring both
+forbid. I wrote that fixture as clean and missed it. The reviewer also found a README diagram that
+disagrees with `refund` in the orders fixture, and a second real interaction in the jobstats fixture
+that I had not designed in. Three fixtures, three things the author missed, found by the thing under
+test. Recorded as a research result, not a grading problem.
+
+### Patterns worth remembering
+
+- Local correctness nits have no owner in the roster, so the reviewer keeps them in Should fix and
+  labels them local. That is ADR 0004's gap one level down. The arbiter's unowned-finding path is
+  the fix; the charter should route them there. Not changed yet.
+- Severity is binary in the charter and was binary in practice. A real interaction with a mild
+  consequence got BLOCK. One sentence of severity guidance is warranted. Not changed yet.
+- Every seed directory carried `__pycache__` from the author's import checks, and every report
+  flagged it. Same class of harness leak as Experiment 001's settings file. Runner fix pending.
+- Three of six reports dropped the `## systems-reviewer` heading. The relay through the main
+  session is the likely cause.
