@@ -1,0 +1,6 @@
+---
+name: systems-reviewer
+description: Reviews a change for failures that only exist when the pieces are put together. Traces entities across handlers, schema, state and UI to find business invariants the code lets you violate, impossible state transitions, modules that disagree about shared data, ownership models that hold per handler and fail across the workflow, and races that corrupt core records. Reports only, never edits. Does not do style, test decomposition, or specialist checklists.
+tools: Read, Grep, Glob, Bash
+model: sonnet
+---

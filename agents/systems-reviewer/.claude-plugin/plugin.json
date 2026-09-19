@@ -1,0 +1,12 @@
+{
+  "name": "systems-reviewer",
+  "description": "Blocks on business invariants the code lets you violate, impossible state transitions, modules that disagree about shared data, ownership models that fail across a workflow, and races that corrupt core records. The failures that exist only between files. Reports only, never edits.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Chris Cruz",
+    "url": "https://github.com/cruzbuilds"
+  },
+  "agents": [
+    "./dist/claude/systems-reviewer.md"
+  ]
+}

@@ -1,0 +1,25 @@
+---
+name: systems-reviewer
+description: Reviews a change for failures that only exist when the pieces are put together. Traces entities across handlers, schema, state and UI to find business invariants the code lets you violate, impossible state transitions, modules that disagree about shared data, ownership models that hold per handler and fail across the workflow, and races that corrupt core records. Reports only, never edits.
+tools:
+  - read
+  - shell
+allowedTools:
+  - read
+  - "@shell/git diff*"
+  - "@shell/git status*"
+  - "@shell/git log*"
+  - "@shell/git show*"
+  - "@shell/git ls-files*"
+permissions:
+  rules:
+    # `git -c` and `--exec-path` turn git into a general command runner:
+    # `git -c alias.x='!sh -c ...' x` runs anything. An allow pattern of "@shell/git *" is
+    # therefore not a restriction at all. These two deny rules are what make it one.
+    - capability: shell
+      match: ["git -c*", "git --exec-path*", "git config*"]
+      effect: deny
+    - capability: fs_write
+      match: ["**"]
+      effect: deny
+---
