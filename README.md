@@ -6,6 +6,20 @@ Six AI reviewers read the same code change at once. Five have a narrow lane and 
 
 This is V2. V1 was five specialists and a merge, and it was tested before it was trusted: [Experiment 001](https://github.com/cruzbuilds/Five-Critics-or-One-Good-Prompt) put it against one strong generalist prompt and one naive one on a frozen application. The specialists tied the strong generalist on confirmed defects, were more repeatable, and produced the only inspection record; they also filed the most consequential defect in the subject under "nobody owns this" because no lane covered it. V2 is the architecture that came out of that. It has not been measured yet; that is Experiment 002, which has not started. The full V1 record is preserved at [`v1-experiment-final`](https://github.com/cruzbuilds/agentic-review-swarm/releases/tag/v1-experiment-final), and the decision is [ADR 0006](docs/decisions/0006-systems-review-beside-the-specialists.md). The program narrative lives in [agentic-review-lab](https://github.com/cruzbuilds/agentic-review-lab).
 
+## Reading order
+
+This repository is a research record as well as a tool. If you are here to understand how the architecture evolved and what each experiment found, read in this order; each link goes one level deeper and nothing is repeated across levels more than it has to be.
+
+1. This README, through the [evolution](#how-the-architecture-evolved) and [next question](#the-next-question) sections at the end.
+2. [`docs/research/v2-hybrid-review.md`](docs/research/v2-hybrid-review.md): the V2 research record. V1 as tested, what Experiment 001 did and did not establish, the hypothesis, what changed, every evaluation with its numbers, what is and is not demonstrated, contradictions found, the next question.
+3. [Experiment 001](https://github.com/cruzbuilds/Five-Critics-or-One-Good-Prompt), a separate repository: `README.md`, then `ANALYSIS.md` section 13, then the rest as needed. Raw reports, sealed predictions, deviations and verdicts are all there.
+4. [`docs/design.md`](docs/design.md): the shape of this repository, the V1/V2 comparison table, the V2.1 variant that was set aside.
+5. [`docs/decisions/`](docs/decisions/): the individual choices. [0004](docs/decisions/0004-no-general-code-reviewer.md) is V1's reasoning against a general reviewer; [0006](docs/decisions/0006-systems-review-beside-the-specialists.md) supersedes its central assumption and says why.
+6. [`docs/eval-log.md`](docs/eval-log.md): chronological, what evaluation found, including the runs that found bugs in the fixtures.
+7. [`docs/evals/`](docs/evals/): every graded run with its raw reports: `systems-reviewer/run-001`, `swarm/run-001`, `integrated/run-001`. Read a `GRADING.md` first, then the report it cites.
+8. The charters themselves: [`agents/*/charter.md`](agents/) and [`shared/`](shared/). The systems reviewer's and the swarm's are the V2 ones.
+9. [agentic-review-lab](https://github.com/cruzbuilds/agentic-review-lab): the program narrative across all the repositories, and the paper draft when it is published.
+
 ## What it caught
 
 Every pull request on [shelflife](https://github.com/cruzbuilds/shelflife) was reviewed by this swarm before it opened. Five pull requests, **37 findings**, 14 of them blocking, **0 overridden**. By the author's own count, **21 of the 33 actionable findings would have been missed** reading the diff alone. Every finding is written down, with an honest column for whether a human would have caught it: [docs/review-log.md](https://github.com/cruzbuilds/shelflife/blob/main/docs/review-log.md).
@@ -203,5 +217,29 @@ Real use fixed V1 three times before the experiment and the experiment fixed it 
 **What V2 changes, and what it does not.** A systems reviewer beside the specialists, an arbiter in place of the merge, unowned findings that can affect the verdict, disagreements as a section, and the assurance record as its own document. No specialist charter changed. No sequencing: every reviewer still runs independently and in parallel, so V2 stays comparable with V1. The broad-first variant, where the systems review runs first and steers the specialists, is recorded as V2.1 in [docs/design.md](docs/design.md) and is not built.
 
 **What it is not.** It is not a substitute for a human reviewer. The systems reviewer is not a general code reviewer; it has a mandate and an exclusion list, and [ADR 0006](docs/decisions/0006-systems-review-beside-the-specialists.md) explains the difference from the agent [ADR 0004](docs/decisions/0004-no-general-code-reviewer.md) rejected. V2 is not claimed to be better than V1; it is the hypothesis Experiment 001 produced, with evals behind the mechanism and no measurement yet of the outcome. Token cost per review is recorded for V2 evals and was not for V1. The agents run on a copy of your repository and are told never to edit anything, which is enforced by the tools they are granted, not by trust.
+
+## How the architecture evolved
+
+Four steps, each one measured against the one before it, with the evidence preserved.
+
+**1. A simple review prompt.** Twenty-four words: "Review this repository as if it were about to go into production. Find anything you think should be fixed or investigated before it ships." Run as arm C of Experiment 001, after the fact. It found every merge-blocking defect in the subject in every run, ran the build and the linters without being told to, and wrote a probe to prove a bcrypt truncation. It found 30 confirmed defects at 81% precision. Most of what the next two steps were built to add was already in the model.
+
+**2. A structured prompt.** One hundred seventy words naming eleven domains, asking for absences as well as defects, and fixing an output shape. Arm A. It found 38 confirmed defects at 81% precision, eight more than the simple prompt, none of them high-value, at the cost of consistency (44% of its findings recurred in every run against 60%) and roughly double the report length. What direction bought was breadth in hygiene lanes, not detection of the things that mattered most.
+
+**3. V1: parallel specialist review.** Five reviewers with written charters, run independently, merged by any-BLOCK-is-BLOCK. Built on the assumption that comprehensive review decomposes into lanes and that a narrow charter finds more inside its lane. It tied the structured prompt at 38 confirmed defects, was the most repeatable (66%), decomposed "no tests" into thirteen actionable items every run, and produced the only per-agent record of what was checked. It also filed the most consequential defect in the subject under "Handoffs nobody picked up" because no lane owned correctness, and lost its own security lane to both generalists, 11 and 11 to 7. Four of five sealed predictions failed. Tagged [`v1-experiment-final`](https://github.com/cruzbuilds/agentic-review-swarm/releases/tag/v1-experiment-final).
+
+**4. V2: specialists, a systems reviewer, and an evidence-aware arbiter.** The reading of step 3 was that the specialists were not poor reviewers; the architecture had no owner for defects that emerge between reasonable local operations, and its merge did not reason about provenance, corroboration, disagreement, coverage, or findings nobody owned. V2 keeps the five specialists unchanged and parallel, adds a sixth reviewer whose mandate is interactions and whose eligibility rule forbids local findings, and replaces the merge with an arbiter that assigns severity and confidence to unowned findings from the reviewer's own evidence, records disagreements, caps the verdict when coverage is incomplete, and cannot open a file. On its evaluations it does what it was designed to do: five of five interaction seeds reconstructed, seventeen of seventeen deterministic arbitrations, no regressions in the V1 suite, and three fixtures found to contain defects their author had not planted. It has not been compared with V1 on any subject and has not reviewed a real pull request. The full record is [`docs/research/v2-hybrid-review.md`](docs/research/v2-hybrid-review.md).
+
+What changed between each step is the amount and shape of direction: none, a paragraph, five charters, five charters plus a lane for what falls between them and a rule for what to do with it. What the evidence says so far is that direction bought breadth, decomposition, repeatability and a record, and did not buy detection of the worst defects, which the model found at zero direction. The architecture changed because that is what the data showed, and the change is a hypothesis until it is measured.
+
+## The next question
+
+V2 improved the architecture without adding hierarchy or iterative control. Every reviewer still receives a task, investigates once, and returns a report. The arbiter reasons over those reports and nothing else, on purpose. Nothing in the system looks at a reviewer's intermediate evidence and decides whether the investigation should continue, which tool it should reach for next, or whether its hypothesis should change. In the arbiter's own evaluation there was a moment where the right next step was obvious, open the file and settle which of two descriptions was true, and the architecture correctly forbade it, because nobody was chartered to go back and look.
+
+That produces the next research question, recorded here and not yet designed:
+
+> Does review quality improve when static reviewers become managed investigators, able to gather evidence iteratively, choose tools, revise hypotheses, and be directed to continue when their evidence is incomplete?
+
+Nothing in this repository implements that. Before it: V2 on real pull requests, its failures collected into seeds, the known fixture defects repaired, and a decision about whether Experiment 002 compares V1 with V2 or V2 with what comes after.
 
 This is a personal project, built in the open. It started to find out whether narrow written charters beat one general "review this" prompt. The answer was no, not on their own, and the architecture changed because the evidence did.

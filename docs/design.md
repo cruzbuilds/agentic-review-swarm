@@ -75,7 +75,7 @@ V2 came from measurement rather than from a wave. Experiment 001 ([Five-Critics-
 | Evals | one seed per planted defect; one live swarm seed | plus multi-file interaction seeds and deterministic arbiter seeds |
 | General reviewer | none, ADR 0004 | none in 0004's sense; a systems reviewer with a mandate and an exclusion list, ADR 0006 |
 
-Three commits separate them in the history and are meant to: the tag holds V1 as tested; the merge of the tool-execution fix is a defect found while testing V1; everything on `v2/hierarchical-review-model` is V2.
+The history is meant to separate them in three: the tag holds V1 as tested; the tool-execution fix (`a18fba7`, the tagged commit itself) is a defect found while testing V1; everything on `v2/hierarchical-review-model` is V2. As of `c339a07` the second step has not landed: the fix branch was never merged into `main`, and the V2 branch was cut from `main` at `b4732ea` without it, so `scripts/review.sh` on V2 still carries the `--allowedTools` line that denied every tool in Experiment 001's first condition. The evaluations were unaffected (`run-seeds.sh` has its own flags), any real review through `review.sh` would be. Recorded in `docs/research/v2-hybrid-review.md` section 9; the merge is pending.
 
 ## V2.1, recorded and not built
 
