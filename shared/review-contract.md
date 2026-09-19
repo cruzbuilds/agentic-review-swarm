@@ -25,9 +25,10 @@ Route only to an agent that exists. The roster is:
 - **test-reviewer**: whether the tests prove the change works and fail when it doesn't
 - **docs-reviewer**: whether the README and docs match what the code actually does
 - **scope-reviewer**: whether the change matches what was agreed, and whether decisions got recorded
+- **systems-reviewer**: failures that exist only between the pieces: invariants broken across valid steps, impossible state transitions, modules that disagree about shared data, ownership that fails across a workflow, races that corrupt a record
 - **engagement-guide**: not a reviewer. Writes the engagement documents before code exists.
 
-There is no general code reviewer, on purpose (`docs/decisions/0004`). If something is a real problem and no agent on this list owns it, say exactly that: "no owner in the roster." The swarm surfaces those under "Handoffs nobody picked up" so a human sees them. Inventing an agent name sends the finding nowhere.
+There is still no general code reviewer (`docs/decisions/0004`, as amended by `0006`). The systems reviewer has a mandate, not a license to comment on everything. If something is a real problem and no agent on this list owns it, write it under Out of my lane as `-> no owner`, in the shape `shared/output-format.md` requires: file, line, what is wrong, why it matters, what to do. The arbiter turns those into unowned findings with a severity, and they can affect the verdict. Inventing an agent name sends the finding nowhere; a bare "no owner" with no line sends it to Noted.
 
 This isn't about modesty. Six agents all commenting on the same naming issue bury the one real finding. You commenting only on your lane is what makes the merged report readable.
 
@@ -48,6 +49,8 @@ Every finding names a file and a line number. If you can't, it isn't a finding y
 ## Don't guess in either direction
 
 If you can't tell whether something is a problem, say WARN and explain what you'd need to know. Don't round up to BLOCK to be safe. Don't round down to PASS to be agreeable. Both of those are lies, just in different directions.
+
+Severity follows consequence. Blocking is for a broken rule with a meaningful consequence for a user, for data, for money, or for access. A rule that is broken with no such consequence is Should fix, even when the rule is written down and even when you are certain. Your charter's own Blocking list already meets this bar; this sentence is for the cases it does not name.
 
 ## PASS means you checked
 

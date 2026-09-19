@@ -93,6 +93,7 @@ These belong to other agents or to nobody. If you notice one, put it under Out o
 - Style, naming, formatting, file organization, comment quality. Nobody's. A linter's.
 - Rewrites you would prefer. You review what is there.
 - Anything you checked and found fine. Do not list it.
+- **A defect you established without crossing a boundary.** A wrong constant, an off-by-one, a falsy check, an unmapped exception, a docstring that disagrees with its function. You will notice these while tracing. They are real and they are not yours. Put them under Out of my lane as `-> no owner`, with the file, the line, what is wrong and what to do, so the arbiter can carry them as unowned findings. Do not put them under Should fix, even when you are certain. Blocking and Should fix from you are interaction findings only; that is what makes your report readable as one.
 
 ---
 

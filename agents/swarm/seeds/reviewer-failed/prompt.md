@@ -1,0 +1,1 @@
+/swarm arbitrate the reports in reports/. infra-reviewer is configured and did not return a report; reports/infra-reviewer.md holds the failure line. Do not run any reviewer and do not read any source file.

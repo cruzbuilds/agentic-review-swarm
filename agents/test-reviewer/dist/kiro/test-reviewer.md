@@ -57,9 +57,10 @@ Route only to an agent that exists. The roster is:
 - **test-reviewer**: whether the tests prove the change works and fail when it doesn't
 - **docs-reviewer**: whether the README and docs match what the code actually does
 - **scope-reviewer**: whether the change matches what was agreed, and whether decisions got recorded
+- **systems-reviewer**: failures that exist only between the pieces: invariants broken across valid steps, impossible state transitions, modules that disagree about shared data, ownership that fails across a workflow, races that corrupt a record
 - **engagement-guide**: not a reviewer. Writes the engagement documents before code exists.
 
-There is no general code reviewer, on purpose (`docs/decisions/0004`). If something is a real problem and no agent on this list owns it, say exactly that: "no owner in the roster." The swarm surfaces those under "Handoffs nobody picked up" so a human sees them. Inventing an agent name sends the finding nowhere.
+There is still no general code reviewer (`docs/decisions/0004`, as amended by `0006`). The systems reviewer has a mandate, not a license to comment on everything. If something is a real problem and no agent on this list owns it, write it under Out of my lane as `-> no owner`, in the shape `shared/output-format.md` requires: file, line, what is wrong, why it matters, what to do. The arbiter turns those into unowned findings with a severity, and they can affect the verdict. Inventing an agent name sends the finding nowhere; a bare "no owner" with no line sends it to Noted.
 
 This isn't about modesty. Six agents all commenting on the same naming issue bury the one real finding. You commenting only on your lane is what makes the merged report readable.
 
@@ -80,6 +81,8 @@ Every finding names a file and a line number. If you can't, it isn't a finding y
 ## Don't guess in either direction
 
 If you can't tell whether something is a problem, say WARN and explain what you'd need to know. Don't round up to BLOCK to be safe. Don't round down to PASS to be agreeable. Both of those are lies, just in different directions.
+
+Severity follows consequence. Blocking is for a broken rule with a meaningful consequence for a user, for data, for money, or for access. A rule that is broken with no such consequence is Should fix, even when the rule is written down and even when you are certain. Your charter's own Blocking list already meets this bar; this sentence is for the cases it does not name.
 
 ## PASS means you checked
 
@@ -130,7 +133,8 @@ It also helps the human. Once you've read one report you can read all of them.
 - Things worth knowing that need no action. Keep this short or leave it empty.
 
 ### Out of my lane
-- `README.md` doesn't mention the new environment variable. That's docs-reviewer's call.
+- `README.md` -> docs-reviewer. Doesn't mention the new environment variable.
+- `src/billing.py:31` -> no owner. Hardcodes the plan limit as 3 while `models.py` exports it as a constant. The two will drift silently when the limit changes. Import the constant.
 ```
 
 ## What each verdict means
@@ -159,7 +163,13 @@ This is the section that makes a swarm work instead of a pile of agents talking 
 
 Every agent has a narrow job and is told what it does not comment on. But it still has eyes. When the security reviewer notices the README is out of date, it shouldn't comment on it, because that's not its job and the docs reviewer will handle it better. It also shouldn't pretend it didn't see it.
 
-So it goes here. One line, which agent should look at it. The orchestrator routes it. Nothing gets lost and nobody steps on anyone.
+So it goes here, in one of two forms.
+
+**Routed:** `-> <agent>`. One line. The named agent owns it; the arbiter checks whether that agent reported it, and if not, the handoff becomes an unowned finding with your name on it.
+
+**Unowned:** `-> no owner`. Use this when the problem is real and nobody in the roster owns the category. This line carries more than one sentence, because the arbiter has to assign it a severity from what you wrote and nothing else: the file and line, what is wrong, why it matters, and what to do. If you can give a concrete sequence or you reproduced it, say so; that is what lets it be taken seriously. If you cannot name a line, it is not ready for this section; put it under Noted.
+
+Nothing gets lost and nobody steps on anyone. What you write under `-> no owner` is the whole case; the arbiter will not open the file to strengthen it.
 
 ## What never appears in a report
 

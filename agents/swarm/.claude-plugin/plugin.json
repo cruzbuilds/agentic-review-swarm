@@ -1,6 +1,6 @@
 {
   "name": "swarm",
-  "description": "Runs every installed review agent on a change in parallel and merges their reports into one verdict. Any single BLOCK is a BLOCK. On Claude Code this is the /swarm command.",
+  "description": "Runs every configured review agent on a change in parallel, then arbitrates their reports into one verdict, a findings list and an assurance record. Any single BLOCK is a BLOCK; a missing reviewer caps the verdict at WARN. On Claude Code this is the /swarm command.",
   "version": "0.1.0",
   "author": {
     "name": "Chris Cruz",
