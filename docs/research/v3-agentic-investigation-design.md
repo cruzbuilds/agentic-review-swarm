@@ -420,7 +420,9 @@ from, for whether the cited field justified the question.
 **Reporting.** Per arm, per subject, per run, with the declared-scope discipline of Experiment 001:
 arms are compared on what both were asked to do, and out-of-scope discoveries are reported
 separately. Nothing is normalized away. Sealed hypotheses (section 15) are graded whether they held
-or not. **Causal claims are limited to what the design controls:** the charters, the model, the tool
+or not. Every numeric threshold in section 15 that is a judgment call (H3b's mean of 0.5, H4's 3x,
+H5's and H7's ten points, H8's one third) is labeled there as preregistered and chosen before data;
+none is presented as something the data found. **Causal claims are limited to what the design controls:** the charters, the model, the tool
 registry, the subject and the round-0 input are held constant, so a difference is attributable to the
 V3 treatment as a bundle (section 16); it is not attributable to any one element of that bundle, and
 the write-up does not say otherwise.
@@ -513,17 +515,26 @@ graded separately.
   no, on these subjects, and that is published.
 - **H1.** V3 produces more confirmed defects at evidence quality *reproduced* or *tool-corroborated*
   than V2, per run. Fails if V3 ≤ V2 on the primary-discovery subject.
-- **H2.** Iteration is load-bearing: at least one confirmed defect per run on the primary-discovery
-  subject is absent from every round-0 card and present in the final report. Fails if every confirmed
-  finding was already on a round-0 card, in which case the loop added nothing beyond the addendum.
-  (With the charters held constant, round 0 is a faithful V2-comparable baseline, so this test is now
-  clean.)
+- **H2.** Iteration is load-bearing: on the primary-discovery subject, in at least two of three runs,
+  at least one confirmed defect is absent from every round-0 card of that run and present in that
+  run's final report. Fails otherwise, in which case the loop added nothing beyond the addendum in
+  most runs. Graded at the subject level so that one stochastic blank run does not fail the
+  hypothesis; per-run counts are still reported so a two-of-three pass with a blank run is visible as
+  exactly that. The "absent from round 0" test stays per run: a defect on round 0's card in one run
+  does not count as load-bearing in another. (With the charters held constant, round 0 is a faithful
+  V2-comparable baseline, so this test is clean.)
 - **H3a, syntactic.** Zero redirects name a suspected defect, by a human reading the log. Fails on
   one. This is the guardrail.
 - **H3b, semantic.** Under blind scoring, no redirect scores 2 and the mean score is below 0.5.
   Fails if any redirect scores 2, or the mean is 0.5 or above. This is the measurement.
 - **H4.** Compute is bounded: V3's output tokens per confirmed defect are no more than three times
-  V2's, per subject. Fails above that, regardless of H1.
+  V2's, per subject. Fails above that, regardless of H1. **The 3x figure is a preregistered
+  engineering acceptability threshold, not a natural boundary.** It is the most this project is
+  willing to pay for a review that runs on every pull request, chosen before any data. The reasoning:
+  Anthropic's research system runs at roughly fifteen times a single chat and is worth it for
+  high-value one-off research; a review runs per pull request, so its cost tolerance is an order of
+  magnitude lower. If V3 exceeds 3x and finds what V2 missed, the write-up records that H4 failed as
+  preregistered and then argues the number, in that order.
 - **H5.** Boundary routing does not anchor: findings whose evidence chain includes a boundary
   question are confirmed at a rate within ten points of findings that do not. Fails otherwise.
 - **H6.** The addendum does not change the lane: out-of-lane findings per report are within one of
