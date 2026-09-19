@@ -63,22 +63,23 @@ form: the reviewer ran `parse_date("09/13/2026")`, got `4026-09-13`, and reporte
 defect with a reproduction. That is a V1 specialist using a V2 contract form correctly, on the first
 run after the form was introduced, and finding a real bug the seed did not plant.
 
-### 4. `swarm/three-lanes`: BLOCK, missing term "[security-reviewer". Evaluation failure (expectation written against V1 output shape), not a regression.
+### 4. `swarm/three-lanes`: BLOCK, "missing: [security-reviewer". Harness failure, resolved on replay. Not a regression.
 
-The expectation requires the literal string `[security-reviewer` to check attribution brackets. The
-V2 arbiter wrote `[security-reviewer, infra-reviewer, found independently]` in the findings section
-(the term is present there) but the runner's check succeeded on that... except this run's report
-placed the static-keys finding with the tag `[security, infra]` in the assurance record's
-corroboration line and `[security-reviewer, infra-reviewer]` in the finding. On inspection the
-literal `[security-reviewer` does appear at line 14 of the report. The runner's `must_mention` check
-runs `grep -qiF` over the whole report, which should have matched. The run log says it did not. The
-saved report is what the runner saved after the check, and the two may differ if the report was
-re-rendered. **Classification: harness, pending.** The arbiter Run 001 report for the same seed,
-three hours earlier at `c6352b5`, passed the same check with the same tag format. This needs the
-runner's check replayed against the saved file before it can be called anything else; it is
-recorded here as unresolved rather than guessed at. The verdict, the merge (14 bullets to 12 with
-dual attribution), the unowned finding from four handoffs, and both disagreements are correct on
-reading.
+The saved report contains the literal `[security-reviewer` at line 14, and the runner's exact check
+(`printf '%s' "$report" | grep -qiF -- '[security-reviewer'`) matches it, exit 0, when replayed on
+GNU grep. It did not match on the Mac during the run. The one difference between this report and the
+arbiter Run 001 report for the same seed, which passed the same check three hours earlier: this one
+contains a single non-ASCII character, `×` (U+00D7), at line 113 in the assurance record ("U3 ×3").
+macOS ships BSD grep, and BSD grep with `-i` and `-F` together on input containing a multibyte
+character is a known failure mode: the case-insensitive fixed-string path mishandles multibyte input
+and reports no match. The other report in this run with a non-ASCII character, `test-reviewer--clean`,
+has no `must_mention` terms and so could not show the same fault.
+
+Classification: **harness**, a portability defect in `run-seeds.sh`'s term check on macOS, triggered
+by a reviewer writing `×`. The arbitration itself is correct on reading: 14 Blocking bullets merged
+to 12 with dual attribution, an unowned finding assembled from four reviewers' handoffs, disagreements
+recorded. Fix candidates, none applied: `LC_ALL=C` on the grep, or `grep -qi -e` with the term
+escaped, or a Python check. Recorded for the fixture-and-harness commit.
 
 ## Regressions from V1
 
@@ -105,7 +106,7 @@ and this pass does not make it so.
   terms are one synonym each; the check is brittle to correct paraphrase.
 - `test-reviewer/seeds/no-test-for-new-branch/dates.py`: accepts MM/DD/YYYY and returns year 4026
   (reviewer finding, reproduced).
-- `swarm/seeds/three-lanes/expected.md`: written against the V1 merge shape; needs the replay above.
+- `scripts/run-seeds.sh`: `grep -qiF` on macOS fails on input with a multibyte character; replayed and confirmed on the saved report.
 - `systems-reviewer/seeds/clean`: still not clean (Run 001).
 
 None changed. All go to the fixture-repair list, one commit, after this run is frozen.
@@ -125,7 +126,7 @@ None changed. All go to the fixture-repair list, one commit, after this run is f
 
 The mechanism is: six reviewers run, the arbiter applies its rules, the two documents come out,
 nothing regressed. What is not ready is everything that would make Experiment 002 honest: the
-fixtures above need repair, the `three-lanes` check needs replay, and V2 has not been used on a
+fixtures above need repair, the `three-lanes` failure is a macOS grep portability bug in the runner, and V2 has not been used on a
 single real pull request. The protocol for Experiment 002 is a paragraph. The recommendation stands
 as written in ADR 0006 and the lab roadmap: use V2 on real work first, collect its failures into
 seeds the way V1's were, and design 002 with predictions sealed before deciding to spend the compute.
