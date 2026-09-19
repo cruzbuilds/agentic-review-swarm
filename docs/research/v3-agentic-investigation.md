@@ -115,5 +115,5 @@ That V3 will find more. That iteration is worth its cost. That a manager can jud
 than a reviewer can. That any of this is agentic in more than the bounded sense above. Those are the
 things the experiment would measure.
 
-**What came next:** nothing yet. This document is the last node in the research chain as of
-2026-09-19.
+**What came next:** a design for review, on branch `v3/agentic-investigation`:
+[v3-agentic-investigation-design.md](v3-agentic-investigation-design.md). Design only; nothing built.

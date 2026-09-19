@@ -96,6 +96,7 @@ V3 (proposed)       intermediate evidence begins deciding subsequent execution
 | [experiment-001.md](experiment-001.md) | Experiment 001 as it bears on this repository: design, numbers, what is and is not supported, links into the experiment's own repository, which holds the raw record |
 | [v2-hybrid-review.md](v2-hybrid-review.md) | V2: starting point, hypothesis, what changed, every evaluation run with its numbers, demonstrated versus not, contradictions found, the next question |
 | [v3-agentic-investigation.md](v3-agentic-investigation.md) | The proposed next architecture and the question it would test. Not built |
+| [v3-agentic-investigation-design.md](v3-agentic-investigation-design.md) | The V3 design for review: manager and investigator contracts, state card, tool registry, context flow, budgets, arbiter integration, failure modes, evaluation protocol, deterministic vs model-directed, mapping to Anthropic's patterns, falsifiable hypotheses. On branch `v3/agentic-investigation`. Design only |
 | [paper.md](paper.md) | The synthesis, in the author's voice, kept chronological: question, V1, Experiment 001, diagnosis, V2, evaluations, remaining question |
 
 Related, outside this directory: [`../design.md`](../design.md) for the shape of the repository and
