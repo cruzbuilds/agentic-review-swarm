@@ -94,3 +94,28 @@ test. Recorded as a research result, not a grading problem.
   flagged it. Same class of harness leak as Experiment 001's settings file. Runner fix pending.
 - Three of six reports dropped the `## systems-reviewer` heading. The relay through the main
   session is the likely cause.
+
+## 2026-09-19, swarm (arbiter) Run 001: nine of nine, and the arbiter would not open the file
+
+First eval of the V2 arbiter at `c6352b5`: eight deterministic seeds (saved reviewer reports as
+input) plus the V1 live seed with six reviewers. All nine correct on verdict and on the rule each
+seed tests. Matrix and raw reports in `docs/evals/swarm/run-001/`.
+
+The elevation guardrail worked in both directions on the same location: blocking/high when the
+reviewer wrote a reproduction and a consequence, should-fix/low when it hedged, each with a basis
+line quoting the reviewer. The no-file-access rule held when it cost something: the `disagreement`
+fixture is internally inconsistent (a `.py` file with JavaScript types, and two conflicting
+coverage lines, both my authoring errors), the arbiter noticed from the reports, said it could not
+resolve it without opening the file, and did not.
+
+On the live seed, four reviewers' handoffs that infra-reviewer did not pick up became one unowned
+finding at should-fix with all four credited. In V1 that was four lines with no severity. And the
+systems reviewer declined to raise the unconditional overwrite as a finding because no invariant
+was stated, which is the false-positive behavior Run 001's invalid clean seed could not measure.
+
+### Patterns worth remembering
+
+- A reviewer's "I could not check this" is not a disagreement with another reviewer's Blocking.
+  The arbiter resolved it correctly and classified it wrong. One sentence, deferred.
+- Generated fixtures need the same review as hand-written ones. Two of my eight had defects the
+  arbiter found.
