@@ -6,7 +6,7 @@ How this repository is shaped and why. The ADRs in `decisions/` hold the individ
 
 Several AI reviewers examine the same change at once, independently. Five have a defined lane and a list of what they refuse to pass. One reasons about the system as a whole and owns what falls between the lanes. An arbiter turns their reports into one verdict, one findings list, and one assurance record. Agents criticize. People build.
 
-That is V2. V1 was the five specialists and a merge, and the difference is the subject of [ADR 0006](decisions/0006-systems-review-beside-the-specialists.md). The rest of this document describes the repository as it is now and marks where V1 differed.
+That is V2. V1 was the five specialists and a merge, and the difference is the subject of [ADR 0006](decisions/0006-systems-review-beside-the-specialists.md). The rest of this document describes the repository as it is now and marks where V1 differed. The research record, with the evidence for each version, is [`research/README.md`](research/README.md); this document is about shape, not results.
 
 ## Three layers, kept apart
 

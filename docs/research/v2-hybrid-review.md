@@ -1,10 +1,34 @@
 # V2: hybrid review. Research record
 
-**Status:** V2.0 implemented on `v2/hierarchical-review-model`, component-evaluated, integration-verified, not yet used on real work, not yet compared with V1 on any subject. This document is the record of what was built, why, what was tested, and what happened. It is maintained as the work continues; sections are added, not rewritten.
+**Question this answers.** Does a review architecture that adds one whole-system reviewer beside the
+existing specialists, and replaces the merge with an arbiter that reasons over the reviewers'
+evidence, behave as designed: does the new reviewer stay in its mandate and reconstruct cross-system
+defects, does the arbiter apply its rules, and does any of it regress what V1 did well? It does
+**not** answer whether V2 finds more than V1; no comparison has been run.
 
-**Written against:** `c339a07` (2026-09-19). Every number below comes from a preserved artifact in this repository or in the Experiment 001 repository, and each is linked where it lives.
+**What preceded it.** [Experiment 001](experiment-001.md), and the reading of it in
+[ADR 0006](../decisions/0006-systems-review-beside-the-specialists.md).
 
-**How to read this alongside the rest of the repository.** [`README.md`](../../README.md) is the overview. [`design.md`](../design.md) is the shape of the repository and the V1/V2 comparison table. [`decisions/`](../decisions/) holds the individual choices; [0004](../decisions/0004-no-general-code-reviewer.md) is V1's and [0006](../decisions/0006-systems-review-beside-the-specialists.md) is V2's. [`eval-log.md`](../eval-log.md) is the chronological log of what evaluation found, including the runs that found bugs in the fixtures. [`evals/`](../evals/) holds every graded run with its raw reports. Experiment 001 is a separate repository, [Five-Critics-or-One-Good-Prompt](https://github.com/cruzbuilds/Five-Critics-or-One-Good-Prompt), and the program narrative is [agentic-review-lab](https://github.com/cruzbuilds/agentic-review-lab).
+**Where the evidence lives.** [`docs/evals/systems-reviewer/run-001/`](../evals/systems-reviewer/run-001/),
+[`docs/evals/swarm/run-001/`](../evals/swarm/run-001/), [`docs/evals/integrated/run-001/`](../evals/integrated/run-001/),
+each with a `GRADING.md` and every raw report, frozen at the commits named in section 4 and below.
+The chronological account is in [`eval-log.md`](../eval-log.md) from the 2026-09-19 entries onward.
+
+**Status:** V2.0 implemented on `v2/hierarchical-review-model`, component-evaluated, integration-verified,
+not yet used on real work, not yet compared with V1 on any subject. Sections are added, not
+rewritten.
+
+**Written against:** `c339a07` (2026-09-19); header and section 11 added at consolidation. Every
+number below comes from a preserved artifact in this repository or in the Experiment 001 repository.
+
+**Three things a reader should keep apart throughout.** A *mechanical* result is what the seed
+runner's checks said (verdict matched, required terms present). *Behavioral* correctness is what the
+preserved report shows the reviewer or arbiter actually did, read against its charter. *Architecture*
+correctness is whether the design produces the intended behavior when the implementation is right.
+Section 7 has four mechanical failures, zero behavioral failures, and zero architecture failures,
+and this document never collapses those into one number.
+
+**What came next.** [v3-agentic-investigation.md](v3-agentic-investigation.md), a question only.
 
 ---
 
@@ -266,3 +290,19 @@ Two moments in the record point at this. In Experiment 001, the single reviewer 
 > Does review quality improve when static reviewers become managed investigators, able to gather evidence iteratively, choose tools, revise hypotheses, and be directed to continue when their evidence is incomplete?
 
 That architecture is not implemented, not designed past this paragraph, and not the V2.1 variant (which is about ordering, not iteration). Before it, per the [roadmap](https://github.com/cruzbuilds/agentic-review-lab/blob/main/roadmap/README.md): use V2 on real pull requests, collect its failures into seeds, repair the fixtures, land the fix, and only then decide whether Experiment 002 compares V1 against V2, or V2 against whatever comes after this question.
+
+## 11. After the frozen runs: hygiene, kept separate
+
+Recorded so that a reader can tell what was changed after each run was frozen, and that none of it
+was a change to a reviewer, the arbiter, a contract, or a fixture under test.
+
+| Commit | What | Classified as |
+| --- | --- | --- |
+| `02c97cd` | `run-seeds.sh` strips `__pycache__` from a staged seed before it becomes a repository. After systems-reviewer Run 001 was frozen at `a46d685`. | harness hygiene |
+| `1771099`, `5514f27` | README, design.md, marketplace and per-agent install lines for V2 and the current repository name. Between arbiter Run 001 and the integrated run. | documentation, distribution |
+| `fdaf574` and the consolidation that follows it | Research record, navigation, this directory. | documentation |
+
+Still pending, none done: the tool-execution fix merge (section 9); five fixture repairs; the runner's
+term check (`must_mention` synonym tolerance, and `LC_ALL=C` or a Python check for the macOS
+`grep -iF` multibyte fault); the arbiter's rule 9 calibration sentence. When any of these lands, the
+gradings in `docs/evals/` stay as graded and the change is logged in `eval-log.md`.

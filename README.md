@@ -8,17 +8,31 @@ This is V2. V1 was five specialists and a merge, and it was tested before it was
 
 ## Reading order
 
-This repository is a research record as well as a tool. If you are here to understand how the architecture evolved and what each experiment found, read in this order; each link goes one level deeper and nothing is repeated across levels more than it has to be.
+This repository is a research record as well as a tool. Give it to a person or a model and ask "what
+was built, how did the architecture evolve, what did each experiment show, what evidence supports the
+changes, what failed, what is being tested next," and this is the path that answers it. Each step
+goes one level deeper; nothing is duplicated across levels more than it has to be.
 
-1. This README, through the [evolution](#how-the-architecture-evolved) and [next question](#the-next-question) sections at the end.
-2. [`docs/research/v2-hybrid-review.md`](docs/research/v2-hybrid-review.md): the V2 research record. V1 as tested, what Experiment 001 did and did not establish, the hypothesis, what changed, every evaluation with its numbers, what is and is not demonstrated, contradictions found, the next question.
-3. [Experiment 001](https://github.com/cruzbuilds/Five-Critics-or-One-Good-Prompt), a separate repository: `README.md`, then `ANALYSIS.md` section 13, then the rest as needed. Raw reports, sealed predictions, deviations and verdicts are all there.
-4. [`docs/design.md`](docs/design.md): the shape of this repository, the V1/V2 comparison table, the V2.1 variant that was set aside.
-5. [`docs/decisions/`](docs/decisions/): the individual choices. [0004](docs/decisions/0004-no-general-code-reviewer.md) is V1's reasoning against a general reviewer; [0006](docs/decisions/0006-systems-review-beside-the-specialists.md) supersedes its central assumption and says why.
-6. [`docs/eval-log.md`](docs/eval-log.md): chronological, what evaluation found, including the runs that found bugs in the fixtures.
-7. [`docs/evals/`](docs/evals/): every graded run with its raw reports: `systems-reviewer/run-001`, `swarm/run-001`, `integrated/run-001`. Read a `GRADING.md` first, then the report it cites.
-8. The charters themselves: [`agents/*/charter.md`](agents/) and [`shared/`](shared/). The systems reviewer's and the swarm's are the V2 ones.
-9. [agentic-review-lab](https://github.com/cruzbuilds/agentic-review-lab): the program narrative across all the repositories, and the paper draft when it is published.
+```
+README.md                                   the story in brief (this file, through "How the architecture evolved")
+  -> docs/research/README.md                the research map: stages 0 to 3 and next, every transition, every commit
+     -> docs/research/experiment-001.md     Experiment 001 as it bears here; links into the experiment's own repository
+     -> docs/research/v2-hybrid-review.md   V2: hypothesis, changes, three evaluation runs, demonstrated vs not
+        -> docs/evals/<run>/GRADING.md      the graded run, then the raw report it cites
+     -> docs/research/v3-agentic-investigation.md   the next question, proposed only
+     -> docs/research/paper.md              the synthesis, chronological, living
+  -> docs/design.md                         the shape of the repository, V1/V2 side by side, V2.1 set aside
+  -> docs/decisions/                        each choice; 0004 is V1's, 0006 is V2's
+  -> docs/eval-log.md                       chronological, what evaluation found, including bugs in the fixtures
+  -> agents/*/charter.md, shared/           the implementation, current version only
+  -> git tags and history                   every earlier implementation, exactly as tested
+```
+
+Experiment 001's raw record lives in its own repository,
+[Five-Critics-or-One-Good-Prompt](https://github.com/cruzbuilds/Five-Critics-or-One-Good-Prompt),
+on purpose: its sealed predictions and append-only findings depend on that repository's own commit
+history. The program narrative across repositories is [agentic-review-lab](https://github.com/cruzbuilds/agentic-review-lab),
+which now points back here as the canonical record.
 
 ## What it caught
 
@@ -197,6 +211,7 @@ When an agent misses something on a real repository, that becomes a new seed.
 | `shared/` | The output format and the review rules every agent follows |
 | `scripts/` | build, install, run-seeds, review (run the swarm on any repo), and the health check CI runs |
 | `engagement/` | Why this exists: the intake, discovery, and scope that led to it |
+| `docs/research/` | The research record: the map, Experiment 001, V2, the proposed V3, the paper. Start at its README |
 | `docs/design.md` | The shape of the repo and the reasoning |
 | `docs/decisions/` | Individual decisions, recorded as ADRs. 0004 (no general reviewer) is the V1 decision; 0006 supersedes its central assumption and says why |
 | `docs/evals/` | Every evaluation run, graded, with the raw reports, including the ones that found bugs in the fixtures |
@@ -220,7 +235,28 @@ Real use fixed V1 three times before the experiment and the experiment fixed it 
 
 ## How the architecture evolved
 
-Four steps, each one measured against the one before it, with the evidence preserved.
+```
+Simple prompt
+      |
+      v
+Structured prompt
+      |
+      v
+V1: parallel specialists
+      |
+      |  Experiment 001 exposes an ownership gap: the worst defect crosses lanes and lands
+      |  in "nobody owns this"; the specialists themselves were capable
+      v
+V2: specialists + systems reviewer + evidence-aware arbiter
+      |
+      |  component and integrated evaluation: mechanisms behave as designed;
+      |  not compared with V1; no real pull requests yet
+      v
+NEXT: agentic investigation (proposed, not built)
+```
+
+Four steps, each one measured against the one before it, with the evidence preserved. The full map,
+with every transition and every commit, is [`docs/research/README.md`](docs/research/README.md).
 
 **1. A simple review prompt.** Twenty-four words: "Review this repository as if it were about to go into production. Find anything you think should be fixed or investigated before it ships." Run as arm C of Experiment 001, after the fact. It found every merge-blocking defect in the subject in every run, ran the build and the linters without being told to, and wrote a probe to prove a bcrypt truncation. It found 30 confirmed defects at 81% precision. Most of what the next two steps were built to add was already in the model.
 
@@ -240,6 +276,6 @@ That produces the next research question, recorded here and not yet designed:
 
 > Does review quality improve when static reviewers become managed investigators, able to gather evidence iteratively, choose tools, revise hypotheses, and be directed to continue when their evidence is incomplete?
 
-Nothing in this repository implements that. Before it: V2 on real pull requests, its failures collected into seeds, the known fixture defects repaired, and a decision about whether Experiment 002 compares V1 with V2 or V2 with what comes after.
+Nothing in this repository implements that. The proposed shape, an investigation manager that decides from intermediate evidence whether each investigator continues, redirects, completes or stops, with the V2 arbiter unchanged and downstream of it, is written up as a question in [`docs/research/v3-agentic-investigation.md`](docs/research/v3-agentic-investigation.md). It is bounded: humans still set the objectives, roles, permissions, tools, budgets, stopping conditions and arbiter rules; what would become model-directed is the investigative path inside those bounds. Before it: V2 on real pull requests, its failures collected into seeds, the known fixture defects repaired, the tool-execution fix landed, and a V2 baseline tagged so there is something fixed to compare against.
 
 This is a personal project, built in the open. It started to find out whether narrow written charters beat one general "review this" prompt. The answer was no, not on their own, and the architecture changed because the evidence did.
