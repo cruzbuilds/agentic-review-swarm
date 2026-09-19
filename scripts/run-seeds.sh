@@ -60,6 +60,11 @@ for agent_dir in agents/*/; do
     work="$(mktemp -d)"
     cp -R "$seed_dir"/. "$work"/
     rm -f "$work/expected.md" "$work/prompt.md"
+    # Bytecode caches are not part of any fixture. They appear when someone imports a seed's
+    # modules in place to check it, and once copied here they get committed into the scratch repo
+    # and every reviewer reports them (systems-reviewer Run 001: six of six). Same class of harness
+    # leak as Experiment 001's settings file. Strip them before the seed becomes a repository.
+    find "$work" -type d -name __pycache__ -prune -exec rm -rf {} +
     mkdir -p "$work/.claude/agents" "$work/.claude/commands"
     for d in agents/*/; do
       d="${d%/}"; n="$(basename "$d")"; f="$d/dist/claude/$n.md"
