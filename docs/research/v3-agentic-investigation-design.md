@@ -5,7 +5,9 @@ registry, no seed exists for V3. This document is the proposal a reviewer approv
 rejects before a line is written. V2 on `v2/hierarchical-review-model` is the frozen baseline and is
 not modified by this track.**
 
-**Track:** branch `v3/agentic-investigation`, cut from the V2 consolidation commit `21c0e29`. Revision 2 (second design commit): V3 inherits the V2 charters, so the first experiment tests the investigation loop and not the role wording; blind scoring of manager steering; evidence-based budgets; coverage on the state card; budget-limited findings measured separately. Revision 1 is the previous commit on this branch.
+**Sealed.** The hypotheses in section 15 and the protocol derived from section 10 were committed to the experiment repository as `experiment-002/HYPOTHESES.md` and `experiment-002/PROTOCOL.md` at `8d3e54da2e37d97dd54a6f5ed6241fecac5bec06`, pushed 2026-09-19T14:38:11Z, before any instrumented V2 baseline run, before the primary-discovery subject was chosen, and before any V3 code. Those two files govern the experiment; this document is the design they came from.
+
+**Track:** branch `v3/agentic-investigation`, cut from the V2 consolidation commit `21c0e29`, merged up to `v2.0-baseline` at `64b0303`. Revision 2 (second design commit): V3 inherits the V2 charters, so the first experiment tests the investigation loop and not the role wording; blind scoring of manager steering; evidence-based budgets; coverage on the state card; budget-limited findings measured separately. Revision 1 is the previous commit on this branch.
 Provisional name: Agentic Investigation Architecture. The name can change once the design is settled.
 
 **Question this design would let us answer.** Does giving specialized reviewers iterative

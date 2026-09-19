@@ -52,7 +52,7 @@ NEXT      V3: agentic investigation (proposed, not built)
 | 1 | One structured prompt, 170 words | Arm A of [Experiment 001](experiment-001.md) | 38 confirmed, 81%, eight more than stage 0, none high-value, less repeatable |
 | 2 | V1, five specialists in parallel, simple merge | [Experiment 001](experiment-001.md); code at [`v1-experiment-final`](https://github.com/cruzbuilds/agentic-review-swarm/releases/tag/v1-experiment-final) | 38 confirmed, 79%, most repeatable, only inspection record; C26 unowned |
 | 3 | V2, specialists + `systems-reviewer` + arbiter | [v2-hybrid-review.md](v2-hybrid-review.md); code on `v2/hierarchical-review-model` | systems-reviewer 5/5 interactions; arbiter 17/17; integrated 45/49 mechanical, 0 implementation failures, 0 V1 regressions |
-| next | V3, managed investigators | [v3-agentic-investigation.md](v3-agentic-investigation.md) | nothing; not built |
+| next | V3, managed investigators | [v3-agentic-investigation.md](v3-agentic-investigation.md), [design](v3-agentic-investigation-design.md), and the sealed [Experiment 002](https://github.com/cruzbuilds/Five-Critics-or-One-Good-Prompt/tree/main/experiment-002) | nothing yet; hypotheses sealed, not built |
 
 Stages 0 and 1 were never separate builds. They are the two generalist arms of Experiment 001, and
 they are in this table because the experiment's most useful result was that most of what V1 was
@@ -126,4 +126,7 @@ result that is observed and deliberately not acted on.
 | `fdaf574` | First research record and README navigation |
 | `21c0e29` | Consolidation: `docs/research/` as the canonical record, README navigation chain |
 | `745f155` | Merge of the tool-execution fix (`a18fba7`) into V2, after consolidation; the V2 baseline tag goes here |
+| `9d4d365`, tag `v2.0-baseline` | V2 frozen as the baseline for Experiment 002, after the fix merge |
+| `64b0303` on `v3/agentic-investigation` | V3 design branch brought up to the baseline; design commits `1a4a5ed`, `d57215d`, `fa4a5a8` precede it |
 | Experiment 001 repository | predictions `9e2155d`; subject `b38c5b0`; see [experiment-001.md](experiment-001.md) |
+| Experiment 002, sealed | `experiment-002/` in the same repository at `8d3e54d`, 2026-09-19T14:38:11Z: hypotheses and protocol before any run |
