@@ -273,7 +273,7 @@ None of the four is an architecture or implementation failure. In each, the pres
 
 ## 9. Contradictions and missing data, found while writing this
 
-- **The tool-execution fix is not on the V2 branch.** `a18fba7` (the tagged V1 commit, which adds `Bash` to `review.sh`'s `--allowedTools` and the command allow list) is not an ancestor of `main` (`b4732ea`) or of `v2/hierarchical-review-model`, as of `c339a07`. `scripts/review.sh` on the V2 branch has the `--allowedTools Read,Grep,Glob,Task` line, the D-003 defect. The intended history, stated in `design.md` and the lab, was tag, then merge of the fix, then V2 branch; the merge did not land. This did not affect any evaluation in this document, because `run-seeds.sh` has its own flags with `Bash` included and the reports show tools running. It would affect any real review run through `review.sh` on this branch. Recorded here; the fix is a merge of the existing branch, not new work, and is not done as part of this documentation.
+- **The tool-execution fix was not on the V2 branch until `745f155`.** `a18fba7` (the tagged V1 commit, which adds `Bash` to `review.sh`'s `--allowedTools` and the command allow list) was not an ancestor of `main` (`b4732ea`) or of `v2/hierarchical-review-model` through `c339a07` and the consolidation at `21c0e29`. `scripts/review.sh` on the V2 branch carried the `--allowedTools Read,Grep,Glob,Task` line, the D-003 defect, for that whole span. The intended history, stated in `design.md` and the lab, was tag, then merge of the fix, then V2 branch; the merge did not land until after consolidation. This did not affect any evaluation in this document, because `run-seeds.sh` has its own flags with `Bash` included and the reports show tools running. It would have affected any real review run through `review.sh` on the branch; none was run. Merged at `745f155` (one conflict, in `docs/eval-log.md`, resolved by placing the 2026-09-18 entry before the 2026-09-19 entries). The V2 baseline tag is placed on that merge commit, not on the consolidation, for this reason.
 - **`design.md` and the lab's architecture history state that the fix sits between the tag and V2.** Both are wrong until the merge lands. Corrected in `design.md` in the same commit as this document; the lab is corrected separately.
 - **The paper's section 4 says Experiment 001's tools condition ran the fix.** It did: the arms ran from the fix branch at `a18fba7`, recorded in `runs.csv`. The branch was simply never merged. No contradiction in the experiment; a contradiction in this repository's history.
 - **The `must_mention` check is brittle to correct paraphrase**, and on macOS to any non-ASCII byte in the report. Two evaluation failures and one harness failure in the integrated run are this. Runner change pending.
@@ -302,7 +302,9 @@ was a change to a reviewer, the arbiter, a contract, or a fixture under test.
 | `1771099`, `5514f27` | README, design.md, marketplace and per-agent install lines for V2 and the current repository name. Between arbiter Run 001 and the integrated run. | documentation, distribution |
 | `fdaf574` and the consolidation that follows it | Research record, navigation, this directory. | documentation |
 
-Still pending, none done: the tool-execution fix merge (section 9); five fixture repairs; the runner's
+| `745f155` | Merge of `a18fba7`, the tool-execution fix, into the V2 branch. After consolidation. `review.sh` on V2 now has `Bash` in `--allowedTools`. | fix landing, no new work |
+
+Still pending, none done: five fixture repairs; the runner's
 term check (`must_mention` synonym tolerance, and `LC_ALL=C` or a Python check for the macOS
 `grep -iF` multibyte fault); the arbiter's rule 9 calibration sentence. When any of these lands, the
 gradings in `docs/evals/` stay as graded and the change is logged in `eval-log.md`.
