@@ -1,11 +1,11 @@
 {
-  "name": "agentic-swarm",
+  "name": "agentic-review-swarm",
   "owner": {
     "name": "Chris Cruz",
     "url": "https://github.com/cruzbuilds"
   },
   "metadata": {
-    "description": "Specialized review agents. Each one reads a change from one angle, refuses to pass specific problems, and reports in a shared format. Install one or all."
+    "description": "Specialized review agents plus one systems reviewer and an arbiter. Each reads a change from one angle, refuses to pass specific problems, and reports in a shared format. Install one or all."
   },
   "plugins": [
     {
@@ -83,6 +83,21 @@
       ]
     },
     {
+      "name": "systems-reviewer",
+      "source": "./agents/systems-reviewer",
+      "description": "Blocks on business invariants the code lets you violate across valid steps, impossible state transitions reached by valid operations, modules that disagree about shared data, ownership that fails across a workflow, and races that corrupt a core record. The failures that exist only between files. Reports only, never edits.",
+      "agents": [
+        "./dist/claude/systems-reviewer.md"
+      ],
+      "category": "review",
+      "keywords": [
+        "systems",
+        "correctness",
+        "invariants",
+        "review"
+      ]
+    },
+    {
       "name": "engagement-guide",
       "source": "./agents/engagement-guide",
       "description": "Interviews you one question at a time to fill out an engagement document. Writes 'unknown' instead of guessing. Produces the document; never invents its contents.",
@@ -101,7 +116,7 @@
     {
       "name": "swarm",
       "source": "./agents/swarm",
-      "description": "Runs every installed review agent on a change in parallel and merges their reports into one verdict. Any single BLOCK is a BLOCK. On Claude Code this is the /swarm command.",
+      "description": "Runs every configured review agent on a change in parallel, then arbitrates their reports into one verdict, a findings list and an assurance record. Any single BLOCK is a BLOCK; a missing reviewer caps the verdict at WARN. On Claude Code this is the /swarm command.",
       "commands": [
         "./dist/claude/swarm.md"
       ],

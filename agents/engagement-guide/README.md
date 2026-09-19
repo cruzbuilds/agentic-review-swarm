@@ -6,7 +6,7 @@ It is a scribe and a skeptic, not an author. The easy failure mode for this kind
 
 ## Install
 
-Claude Code: `/plugin install engagement-guide@agentic-swarm`
+Claude Code: `/plugin install engagement-guide@agentic-review-swarm`
 Kiro: `scripts/install-kiro.sh engagement-guide` from the repo root
 
 Then, in a project that has an `engagement/` folder: "Use the engagement-guide subagent to help me fill out 01-intake.md."

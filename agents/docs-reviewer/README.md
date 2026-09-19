@@ -6,7 +6,7 @@ The standard: the code is not the whole deliverable. The code plus the explanati
 
 ## Install
 
-Claude Code: `/plugin install docs-reviewer@agentic-swarm`
+Claude Code: `/plugin install docs-reviewer@agentic-review-swarm`
 Kiro: `scripts/install-kiro.sh docs-reviewer` from the repo root
 
 ## What it blocks on

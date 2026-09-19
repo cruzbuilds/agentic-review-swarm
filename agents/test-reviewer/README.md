@@ -6,7 +6,7 @@ It does not judge whether the code is correct, secure, or documented. It judges 
 
 ## Install
 
-Claude Code: `/plugin install test-reviewer@agentic-swarm`
+Claude Code: `/plugin install test-reviewer@agentic-review-swarm`
 Kiro: `scripts/install-kiro.sh test-reviewer` from the repo root
 
 ## What it blocks on

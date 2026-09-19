@@ -6,7 +6,7 @@ This agent only makes sense in a repository with an `engagement/` folder. Withou
 
 ## Install
 
-Claude Code: `/plugin install scope-reviewer@agentic-swarm`
+Claude Code: `/plugin install scope-reviewer@agentic-review-swarm`
 Kiro: `scripts/install-kiro.sh scope-reviewer` from the repo root
 
 ## What it blocks on

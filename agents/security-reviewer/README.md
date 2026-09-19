@@ -4,7 +4,7 @@ Reads a change for the ways it can be attacked or leak something it shouldn't. R
 
 ## Install
 
-Claude Code: `/plugin install security-reviewer@agentic-swarm`
+Claude Code: `/plugin install security-reviewer@agentic-review-swarm`
 Kiro: `scripts/install-kiro.sh security-reviewer` from the repo root
 
 ## What it blocks on

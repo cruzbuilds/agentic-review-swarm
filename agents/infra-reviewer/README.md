@@ -6,7 +6,7 @@ It shares one concern with security-reviewer, static cloud credentials in CI, an
 
 ## Install
 
-Claude Code: `/plugin install infra-reviewer@agentic-swarm`
+Claude Code: `/plugin install infra-reviewer@agentic-review-swarm`
 Kiro: `scripts/install-kiro.sh infra-reviewer` from the repo root
 
 ## What it blocks on
