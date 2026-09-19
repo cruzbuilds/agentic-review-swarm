@@ -15,7 +15,12 @@
 # project's own test command. Without that, a test reviewer can't run tests and a scope reviewer
 # can't see the diff, and both will tell you so under Noted instead of pretending.
 #
-# Bash is NOT granted bare. A reviewer's only input is a diff written by whoever wrote the change
+# Bash IS named here, and the command-level allow list below is what scopes it. Leaving Bash out of
+# --allowedTools does not narrow the grant, it closes the gate: every shell call is refused before the
+# permission rules are ever consulted. That is how five reviewers ran an entire study with their tools
+# denied while their reports looked normal. See docs/eval-log.md, 2026-09-18.
+#
+# Bash is not granted bare. A reviewer's only input is a diff written by whoever wrote the change
 # under review, which is untrusted content reaching a command executor. Claude Code's agent
 # frontmatter can only name tools, not commands, so the scoping lives here instead: an explicit
 # allow list of the commands a reviewer actually runs, and a deny list for the ways git can be
@@ -28,7 +33,7 @@ cd "$(dirname "$0")/.."
 
 repo="${1:?usage: scripts/review.sh /path/to/repo [git-range]}"
 range="${2:-}"
-: "${CLAUDE_FLAGS:=--allowedTools Read,Grep,Glob,Task --max-turns 60}"
+: "${CLAUDE_FLAGS:=--allowedTools Read,Grep,Glob,Bash,Task --max-turns 60}"
 
 [ -d "$repo/.git" ] || { echo "not a git repository: $repo" >&2; exit 3; }
 command -v claude >/dev/null || { echo "claude CLI not on PATH" >&2; exit 3; }
@@ -70,6 +75,15 @@ cat > "$work/.claude/settings.json" <<'JSON'
       "Bash(npm test:*)",
       "Bash(npm run test:*)",
       "Bash(npm audit:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm run test:*)",
+      "Bash(pnpm audit:*)",
+      "Bash(pnpm exec:*)",
+      "Bash(pnpm install:*)",
+      "Bash(npx:*)",
+      "Bash(tsc:*)",
+      "Bash(eslint:*)",
+      "Bash(node:*)",
       "Bash(pip-audit:*)",
       "Bash(gitleaks:*)",
       "Bash(semgrep:*)",
