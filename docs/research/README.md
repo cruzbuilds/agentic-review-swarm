@@ -124,4 +124,6 @@ result that is observed and deliberately not acted on.
 | `1771099`, `5514f27` | README, design.md, marketplace for V2 |
 | `b6f0b5b`, `c339a07` | Integrated Run 001 frozen, then the `three-lanes` failure replayed and classified |
 | `fdaf574` | First research record and README navigation |
+| `21c0e29` | Consolidation: `docs/research/` as the canonical record, README navigation chain |
+| `745f155` | Merge of the tool-execution fix (`a18fba7`) into V2, after consolidation; the V2 baseline tag goes here |
 | Experiment 001 repository | predictions `9e2155d`; subject `b38c5b0`; see [experiment-001.md](experiment-001.md) |
